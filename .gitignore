@@ -1,0 +1,5 @@
+venv/
+**/*.log
+node_modules/
+__transplited/
+
