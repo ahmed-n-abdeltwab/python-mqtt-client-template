@@ -1,0 +1,55 @@
+asyncapi: 3.0.0
+
+info:
+  title: Temperature Service
+  version: 1.0.0
+  description: This service is in charge of processing all the events related to temperature.
+
+servers:
+  production:
+    host: mqtt://broker.example.com:1883
+    protocol: mqtt
+    description: MQTT server production
+  dev:
+    host: test.mosquitto.org
+    protocol: mqtt
+    description: MQTT server development
+
+channels:
+  temperature/changed:
+    description: Channel for temperature updates
+    messages:
+      TemperatureMessage:
+        description: Temperature change notification
+        payload:
+          type: object
+          properties:
+            temperatureId:
+              $ref: '#/components/schemas/temperatureId'
+            value:
+              type: number
+              description: Temperature in °C
+          required: [temperatureId, value] 
+          additionalProperties: false
+
+operations:
+  publishTemperatureUpdate:
+    action: send
+    description: Publishes temperature updates to the channel
+    channel:
+      $ref: '#/channels/temperature%2Fchanged'
+    messages:
+      - $ref: '#/channels/temperature%2Fchanged/messages/TemperatureMessage'
+
+components:
+  schemas:
+    temperatureId:
+      type: object
+      additionalProperties: false
+      properties:
+        temperatureId:
+          type: string
+          description: Unique identifier for the temperature event.
+          example: "temp-xxxxx"
+          pattern: "^temp-[a-zA-Z0-9]{5}$"
+      required: [temperatureId]

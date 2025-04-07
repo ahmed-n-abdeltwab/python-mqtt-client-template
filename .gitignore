@@ -1,5 +1,6 @@
-venv/
+venv
 **/*.log
-node_modules/
-__transplited/
+node_modules
+__transpiled/
+.nvimsession
 
